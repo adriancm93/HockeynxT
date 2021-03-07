@@ -10,9 +10,9 @@ except ImportError:
     interp2d = None
 import warnings
 warnings.filterwarnings("ignore")
-'Special thanks to socceraction as we adapted their open-source code as a base to work on hockey and as a blueprint‘ 
-'The socceraction team is now cited and listed as co-author of this code'
-'Visit their module here:  https://github.com/ML-KULeuven/socceraction)'
+#Special thanks to socceraction as we adapted their open-source code as a base to work on hockey and as a blueprint
+#The socceraction team is now cited and listed as co-author of this code
+#Visit their module here:  https://github.com/ML-KULeuven/socceraction)
 
 
 M: int = 8

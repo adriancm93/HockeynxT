@@ -1,5 +1,5 @@
 # HockeynxT
-A set of functions to analyze net expected threat using scouting hockey data
+A set of functions to analyze net expected threat using scouting hockey data. Paper: ScoutingData_Open.pdf
 
 **Updates**
 - Expected threat is vailable: HockeynxT/xTHockey.py

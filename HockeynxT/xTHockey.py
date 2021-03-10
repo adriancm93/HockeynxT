@@ -10,10 +10,10 @@ except ImportError:
     interp2d = None
 import warnings
 warnings.filterwarnings("ignore")
+
 #Special thanks to socceraction as we adapted their open-source code as a base to work on hockey and as a blueprint
 #The socceraction team is now cited and listed as co-author of this code
 #Visit their module here:  https://github.com/ML-KULeuven/socceraction)
-
 
 M: int = 8
 N: int = 16
@@ -44,7 +44,8 @@ def _count(x: Series, y: Series, l: int = N, w: int = M) -> np.ndarray:
 def _safe_divide(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return np.divide(a, b, out=np.zeros_like(a), where=b != 0)
 
-def scoring_prob(actions, l: int = N, w: int = M) -> np.ndarray:
+def scoring_prob(actions, l: int = N, w: int = M,t: int = P) -> np.ndarray:
+    actions=actions[actions['time'] == t]
     actions=actions[actions['success'].isna() == False]
     actions=actions[actions['end_x'].isna() == False]
     shot_actions = actions[(actions.type_name == 'Shot')]
@@ -126,7 +127,7 @@ def scoring_prob_augmented(actions, l: int = N, w: int = M, t: int = P) -> np.nd
     xg = clf.predict_proba(frame)[:, 1]
     xg.reshape(w,l)
     return xg.reshape(w,l)
-    
+
 def get_move_actions(actions):
     actions=actions[actions['success'].isna() == False]
     actions=actions[actions['end_x'].isna() == False]
@@ -143,8 +144,9 @@ def get_successful_move_actions(actions):
     return move_actions[move_actions.success == 1.0]
 
 def action_prob(
-    actions, l: int = N, w: int = M
+    actions, l: int = N, w: int = M,t: int = P
 ) -> Tuple[np.ndarray, np.ndarray]:
+    actions=actions[actions['time'] == t]
     actions=actions[actions['success'].isna() == False]
     actions=actions[actions['end_x'].isna() == False]
     move_actions = get_move_actions(actions)
@@ -181,7 +183,7 @@ def move_transition_matrix(actions, l: int = N, w: int = M) -> np.ndarray:
     return transition_matrix
 
 class ExpectedThreat:
-    def __init__(self, l: int = N, w: int = M, eps: float = 1e-5):
+    def __init__(self, l: int = N, w: int = M, t: int = P,eps: float = 1e-5):
         self.l = l
         self.w = w
         self.eps = eps
@@ -224,7 +226,7 @@ class ExpectedThreat:
 
     def fit(self, actions,t) -> 'ExpectedThreat':
         self.scoring_prob_matrix = scoring_prob_augmented(actions,self.l,self.w,t)
-        self.shot_prob_matrix, self.move_prob_matrix = action_prob(actions, self.l, self.w)
+        self.shot_prob_matrix, self.move_prob_matrix = action_prob(actions, self.l, self.w,t)
         self.transition_matrix = move_transition_matrix(actions, self.l, self.w)
         self.__solve(
             self.scoring_prob_matrix,
@@ -233,7 +235,7 @@ class ExpectedThreat:
             self.transition_matrix,
         )
         return self
-    
+
     def get_xT(self, actions) -> np.array:
         l = self.l
         w = self.w
@@ -243,24 +245,24 @@ class ExpectedThreat:
         xT_start = grid[w - 1 - startyc, startxc]
         xT_end = grid[w - 1 - endyc, endxc]
         return xT_start , xT_end
-    
+
 def return_xT_values(actions, l: int = N, w: int = M, t: int = P) -> np.ndarray:
     x = actions.start_x
     y = actions.start_y
     lst = []
     og = actions.copy()
     actions=actions[actions['end_x'].notna()]
-    xTModel = ExpectedThreat(l, w)
-    for t in range(1,5):    
+    for t in range(1,5):
         data_= actions[actions['time'] == t].copy()
         x = data_.start_x
         y = data_.start_y
         indx = data_.index
+        xTModel = ExpectedThreat(l, w)
         xTModel.fit(actions,t)
         start,end = xTModel.get_xT(data_)
         frame = pd.DataFrame(
             data={'xT':start,'index':indx})
-        lst.append(frame)               
+        lst.append(frame)
     df = pd.concat(lst)
     og.reset_index(inplace=True)
     og=og.merge(df,on='index',how='left')

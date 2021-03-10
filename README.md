@@ -13,7 +13,7 @@ Authors:
 - Adrian Cadena
 - Pablo Landeros
 - Evan Cheney
-- 
+
 **Citations**
 
 Special thanks to:

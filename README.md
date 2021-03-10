@@ -6,7 +6,7 @@ A set of functions to analyze net expected threat using scouting hockey data. Pa
     - Expected Threat model with variable time-remaining-in-period
     - An example on how to use this module can be found here: examples/Getting xT values.ipynb
 - Net Expected Threat is available here: HockeynxT/nxTHockey.py
-    -An example on how to use this module can be found here: examples/Getting nxT values.ipynb
+    - An example on how to use this module can be found here: examples/Getting nxT values.ipynb
 
 Authors:
 - socceraction

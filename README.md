@@ -20,6 +20,6 @@ Special thanks to:
 
 Socceraction as we adapted their open-source code as a base to work on hockey and as a blueprint. The socceraction team is now cited and listed as co-author of this code. Visit their module here:  https://github.com/ML-KULeuven/socceraction)
 
-Karun Singh for the developing the methodology behind Expected Threat. His model and approach was greatly leveraged and used as the base of our model.
+Karun Singh for the developing the methodology behind Expected Threat. His model and approach was leveraged as the base of our model.
 Read about Expected Threat here: https://karun.in/blog/expected-threat.html
 
